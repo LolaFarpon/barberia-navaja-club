@@ -1,0 +1,89 @@
+body {
+    background-color: #f3ead9;
+    color: #4a3527;
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    width: 230px;
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem 0.75rem;
+    background: linear-gradient(180deg, #6b4226 0%, #8b5e3c 100%);
+}
+
+.sidebar-brand {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.4rem;
+    letter-spacing: 3px;
+    text-align: center;
+    color: #fdf6ec;
+    margin-bottom: 1.5rem;
+}
+
+.sidebar-nav {
+    flex: 1;
+}
+
+.nav-item {
+    display: block;
+    width: 100%;
+    text-align: left;
+    padding: 0.7rem 1rem;
+    margin-bottom: 0.25rem;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #f3e6d3;
+    font-weight: 500;
+}
+
+.nav-item:hover {
+    background-color: rgba(253, 246, 236, 0.15);
+}
+
+.nav-item.active {
+    background-color: #fdf6ec;
+    color: #6b4226;
+}
+
+.nav-item.logout {
+    border-top: 1px solid rgba(253, 246, 236, 0.3);
+    border-radius: 0 0 8px 8px;
+    margin-top: 0.5rem;
+}
+
+.contenido {
+    margin-left: 230px;
+    padding: 2rem;
+}
+
+.titulo-seccion {
+    color: #6b4226;
+    font-weight: 600;
+}
+
+.stat-card {
+    display: flex;
+    flex-direction: column;
+    padding: 1.25rem;
+    background-color: #fffaf0;
+    border: 1px solid #d9c4a3;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(107, 66, 38, 0.08);
+}
+
+.stat-label {
+    color: #8b5e3c;
+    font-size: 0.9rem;
+}
+
+.stat-valor {
+    color: #6b4226;
+    font-size: 2rem;
+    font-weight: 700;
+}

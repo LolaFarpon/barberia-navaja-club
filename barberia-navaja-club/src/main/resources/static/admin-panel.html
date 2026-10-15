@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Panel Administrador</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="css/admin.css" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+</head>
+<body>
+    <aside class="sidebar">
+        <div class="sidebar-brand">NAVAJA CLUB</div>
+        <nav class="sidebar-nav">
+            <button class="nav-item active" data-seccion="inicio">Inicio</button>
+            <button class="nav-item" data-seccion="turnos">Turnos</button>
+            <button class="nav-item" data-seccion="clientes">Clientes</button>
+            <button class="nav-item" data-seccion="servicios">Servicios</button>
+            <button class="nav-item" data-seccion="reportes">Reportes</button>
+        </nav>
+        <button id="btnCerrarSesion" class="nav-item logout">Cerrar sesión</button>
+    </aside>
+
+    <main class="contenido">
+        <section id="seccion-inicio" class="seccion">
+            <h3 class="titulo-seccion">Inicio</h3>
+            <p id="fechaHoy" class="text-muted"></p>
+
+            <div class="row g-3">
+                <div class="col-6 col-lg-3">
+                    <div class="stat-card">
+                        <span class="stat-label">Turnos de hoy</span>
+                        <span class="stat-valor" id="statTotal">0</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="stat-card">
+                        <span class="stat-label">Confirmados</span>
+                        <span class="stat-valor" id="statConfirmados">0</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="stat-card">
+                        <span class="stat-label">Cancelados</span>
+                        <span class="stat-valor" id="statCancelados">0</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-3">
+                    <div class="stat-card">
+                        <span class="stat-label">Ingresos del día</span>
+                        <span class="stat-valor" id="statIngresos">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <h5 class="titulo-seccion mt-5">Nuestros servicios</h5>
+            <div class="row g-3" id="filaServicios"></div>
+        </section>
+
+        <section id="seccion-turnos" class="seccion d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="titulo-seccion mb-0">Turnos</h3>
+                <button class="btn btn-brown" data-bs-toggle="modal" data-bs-target="#modalNuevoTurno">+ Nuevo turno</button>
+            </div>
+
+            <div class="row g-2 mb-3">
+                <div class="col-auto">
+                    <input type="date" id="filtroFecha" class="form-control input-custom">
+                </div>
+                <div class="col-auto">
+                    <select id="filtroEstado" class="form-select input-custom">
+                        <option value="todos">Todos los estados</option>
+                        <option value="pendiente">Pendiente</option>
+                        <option value="confirmado">Confirmado</option>
+                        <option value="cancelado">Cancelado</option>
+                        <option value="finalizado">Finalizado</option>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <select id="filtroOrden" class="form-select input-custom">
+                        <option value="asc">Más temprano primero</option>
+                        <option value="desc">Más tarde primero</option>
+                    </select>
+                </div>
+            </div>
+
+            <div id="mensajeVacioTurnos" class="alert alert-info d-none">No hay turnos para la fecha seleccionada.</div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle bg-white">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Hora</th>
+                            <th>Cliente</th>
+                            <th>Servicio</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaTurnos"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="seccion-clientes" class="seccion d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="titulo-seccion mb-0">Clientes</h3>
+                <button class="btn btn-brown" data-bs-toggle="modal" data-bs-target="#modalNuevoCliente">+ Nuevo cliente</button>
+            </div>
+
+            <div id="mensajeVacioClientes" class="alert alert-info d-none">No hay clientes cargados.</div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle bg-white">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Cliente</th>
+                            <th>Teléfono</th>
+                            <th>Último turno</th>
+                            <th>Turnos realizados</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaClientes"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="seccion-servicios" class="seccion d-none">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h3 class="titulo-seccion mb-0">Servicios</h3>
+                <button class="btn btn-brown" data-bs-toggle="modal" data-bs-target="#modalNuevoServicio">+ Nuevo servicio</button>
+            </div>
+
+            <div id="mensajeVacioServicios" class="alert alert-info d-none">No hay servicios cargados.</div>
+
+            <div class="table-responsive">
+                <table class="table table-bordered align-middle bg-white">
+                    <thead class="table-dark">
+                        <tr>
+                            <th>Nombre</th>
+                            <th>Descripción</th>
+                            <th>Precio</th>
+                            <th>Estado</th>
+                            <th>Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cuerpoTablaServicios"></tbody>
+                </table>
+            </div>
+        </section>
+
+        <section id="seccion-reportes" class="seccion d-none">
+            <h3 class="titulo-seccion mb-3">Reportes</h3>
+
+            <div class="row g-2 mb-4">
+                <div class="col-auto">
+                    <select id="selectorPeriodo" class="form-select input-custom">
+                        <option value="mes">Este mes</option>
+                        <option value="6meses">Últimos 6 meses</option>
+                        <option value="12meses">Últimos 12 meses</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="row g-3 mb-4">
+                <div class="col-6 col-lg-4">
+                    <div class="stat-card">
+                        <span class="stat-label">Turnos realizados</span>
+                        <span class="stat-valor" id="repRealizados">0</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-4">
+                    <div class="stat-card">
+                        <span class="stat-label">Turnos cancelados</span>
+                        <span class="stat-valor" id="repCancelados">0</span>
+                    </div>
+                </div>
+                <div class="col-6 col-lg-4">
+                    <div class="stat-card">
+                        <span class="stat-label">Ingresos del período</span>
+                        <span class="stat-valor" id="repIngresos">$0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row g-3">
+                <div class="col-lg-6">
+                    <div class="card-custom">
+                        <h6 class="section-title">Servicios más solicitados</h6>
+                        <div id="mensajeVacioReportes" class="alert alert-info d-none">No hay datos para este período.</div>
+                        <canvas id="graficoServicios" style="max-height: 320px;"></canvas>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="card-custom">
+                        <h6 class="section-title">Corte de pelo vs. Barba</h6>
+                        <div id="mensajeVacioComparativo" class="alert alert-info d-none">No hay datos para este período.</div>
+                        <canvas id="graficoComparativo" style="max-height: 320px;"></canvas>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <!-- Modal Nuevo Turno -->
+    <div class="modal fade" id="modalNuevoTurno" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo turno</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="errorNuevoTurno" class="alert alert-danger d-none"></div>
+                    <form id="formNuevoTurno">
+                        <div class="mb-2">
+                            <label class="form-label">Nombre y apellido</label>
+                            <input type="text" id="ntNombre" class="form-control input-custom" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" id="ntTelefono" class="form-control input-custom">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="ntEmail" class="form-control input-custom" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Servicio</label>
+                            <select id="ntServicio" class="form-select input-custom" required>
+                                <option value="">Seleccioná un servicio</option>
+                            </select>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Fecha</label>
+                            <input type="date" id="ntFecha" class="form-control input-custom" required>
+                            <small id="errorFechaAdmin" class="text-danger d-none">Los domingos el local está cerrado. Elegí otro día.</small>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Horario</label>
+                            <select id="ntHora" class="form-select input-custom" required>
+                                <option value="">Elegí una fecha primero</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-brown w-100 mt-2">Guardar turno</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nuevo Cliente -->
+    <div class="modal fade" id="modalNuevoCliente" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo cliente</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="errorNuevoCliente" class="alert alert-danger d-none"></div>
+                    <form id="formNuevoCliente">
+                        <div class="mb-2">
+                            <label class="form-label">Nombre y apellido</label>
+                            <input type="text" id="ncNombre" class="form-control input-custom" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Teléfono</label>
+                            <input type="text" id="ncTelefono" class="form-control input-custom">
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Email</label>
+                            <input type="email" id="ncEmail" class="form-control input-custom" required>
+                        </div>
+                        <button type="submit" class="btn btn-brown w-100 mt-2">Guardar cliente</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Historial de Cliente -->
+    <div class="modal fade" id="modalHistorialCliente" tabindex="-1">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="historialTitulo">Historial de turnos</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="mensajeVacioHistorial" class="alert alert-info d-none">Este cliente todavía no tiene turnos.</div>
+                    <table class="table table-sm table-bordered">
+                        <thead class="table-dark">
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Hora</th>
+                                <th>Servicio</th>
+                                <th>Estado</th>
+                            </tr>
+                        </thead>
+                        <tbody id="cuerpoHistorial"></tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Nuevo Servicio -->
+    <div class="modal fade" id="modalNuevoServicio" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Nuevo servicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="errorNuevoServicio" class="alert alert-danger d-none"></div>
+                    <form id="formNuevoServicio">
+                        <div class="mb-2">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" id="nsNombre" class="form-control input-custom" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Descripción</label>
+                            <textarea id="nsDescripcion" class="form-control input-custom" rows="2"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Precio</label>
+                            <input type="number" id="nsPrecio" class="form-control input-custom" min="0" step="1" required>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" id="nsActivo" class="form-check-input" checked>
+                            <label class="form-check-label" for="nsActivo">Activo</label>
+                        </div>
+                        <button type="submit" class="btn btn-brown w-100 mt-2">Guardar servicio</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Editar Servicio -->
+    <div class="modal fade" id="modalEditarServicio" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Editar servicio</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="errorEditarServicio" class="alert alert-danger d-none"></div>
+                    <form id="formEditarServicio">
+                        <input type="hidden" id="esId">
+                        <div class="mb-2">
+                            <label class="form-label">Nombre</label>
+                            <input type="text" id="esNombre" class="form-control input-custom" required>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Descripción</label>
+                            <textarea id="esDescripcion" class="form-control input-custom" rows="2"></textarea>
+                        </div>
+                        <div class="mb-2">
+                            <label class="form-label">Precio</label>
+                            <input type="number" id="esPrecio" class="form-control input-custom" min="0" step="1" required>
+                        </div>
+                        <div class="form-check mb-2">
+                            <input type="checkbox" id="esActivo" class="form-check-input">
+                            <label class="form-check-label" for="esActivo">Activo</label>
+                        </div>
+                        <button type="submit" class="btn btn-brown w-100 mt-2">Guardar cambios</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/admin-panel.js"></script>
+</body>
+</html>

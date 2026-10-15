@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Barbería Navaja Club</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+    <!-- HERO con foto de la barbería -->
+    <header class="hero-full d-flex align-items-center justify-content-center text-center">
+        <div class="hero-full-overlay"></div>
+        <div class="hero-full-content">
+            <h1 class="logo-title display-3">NAVAJA CLUB</h1>
+        </div>
+    </header>
+
+    <!-- ACERCA DE NOSOTROS -->
+    <section class="container text-center py-5" style="max-width: 700px;">
+        <h2 class="section-title">Acerca de nosotros</h2>
+        <p class="fs-5" style="color:#4a3527;">
+            Nos apasiona crear looks que representen tu estilo. Una peluquería de Villa María donde combinamos estilo, creatividad y buena onda.
+        </p>
+    </section>
+
+    <!-- EQUIPO -->
+    <section class="container py-4">
+        <h2 class="section-title text-center mb-4">Nuestro equipo</h2>
+        <div class="row justify-content-center g-4">
+            <div class="col-6 col-md-4 text-center">
+                <img src="img/pedro.jpeg" alt="Pedro" class="team-photo">
+                <h5 class="mt-2" style="color:#6b4226;">Pedro</h5>
+            </div>
+            <div class="col-6 col-md-4 text-center">
+                <img src="img/francisco.jpeg" alt="Francisco" class="team-photo">
+                <h5 class="mt-2" style="color:#6b4226;">Francisco</h5>
+            </div>
+        </div>
+    </section>
+
+    <!-- SERVICIOS -->
+    <section class="container py-4">
+        <h2 class="section-title text-center mb-4">Nuestros servicios</h2>
+        <div class="row g-3" id="filaServiciosPublic"></div>
+    </section>
+
+    <!-- UBICACIÓN Y BOTONES -->
+    <section class="container py-5">
+        <div class="card-custom">
+            <div class="row align-items-center">
+                <div class="col-md-6 mb-3 mb-md-0">
+                    <h5 class="section-title">Dónde estamos</h5>
+                    <p class="fs-5 mb-0" style="color:#4a3527;">📍 Catamarca 1134</p>
+                </div>
+                <div class="col-md-6 d-flex flex-column gap-2">
+                    <button class="btn btn-brown" data-bs-toggle="modal" data-bs-target="#modalAgendarTurno">Agendar un turno</button>
+                    <button class="btn btn-outline-brown" data-bs-toggle="modal" data-bs-target="#modalBuscarTurno">Buscar mi turno</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="text-center py-3">
+        <small>Navaja Club © 2026</small>
+    </footer>
+
+    <!-- Botón oculto para acceso de administrador -->
+    <div style="position: fixed; bottom: 10px; right: 10px; width: 20px; height: 20px; opacity: 0;">
+        <a href="admin-login.html" style="display: block; width: 100%; height: 100%;"></a>
+    </div>
+
+    <!-- MODAL: Agendar turno -->
+    <div class="modal fade" id="modalAgendarTurno" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title section-title">Agendar un turno</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <div id="mensajeExito" class="alert alert-success d-none"></div>
+                    <div id="mensajeError" class="alert alert-danger d-none"></div>
+
+                    <form id="formTurno">
+                        <div class="mb-3">
+                            <label for="nombreCliente" class="form-label">Nombre</label>
+                            <input type="text" class="form-control input-custom" id="nombreCliente" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="telefono" class="form-label">Teléfono (opcional)</label>
+                            <input type="text" class="form-control input-custom" id="telefono">
+                        </div>
+                        <div class="mb-3">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="email" class="form-control input-custom" id="email" required>
+                        </div>
+                        <div class="mb-3">
+                            <label for="servicio" class="form-label">Servicio</label>
+                            <select class="form-select input-custom" id="servicio" required>
+                                <option value="">Seleccioná un servicio</option>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="fecha" class="form-label">Fecha</label>
+                            <input type="date" class="form-control input-custom" id="fecha" required>
+                            <small id="errorFechaCliente" class="text-danger d-none">Los domingos el local está cerrado. Elegí otro día.</small>
+                        </div>
+                        <div class="mb-3">
+                            <label for="hora" class="form-label">Horario disponible</label>
+                            <select class="form-select input-custom" id="hora" required>
+                                <option value="">Elegí una fecha primero</option>
+                            </select>
+                        </div>
+                        <button type="submit" class="btn btn-brown w-100">Confirmar turno</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL: Buscar turno -->
+    <div class="modal fade" id="modalBuscarTurno" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title section-title">¿Ya tenés un turno?</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                    <label for="buscarNombre" class="form-label">Buscar por nombre y fecha</label>
+                    <div class="mb-2">
+                        <input type="text" class="form-control input-custom mb-2" id="buscarNombre" placeholder="Tu nombre">
+                        <input type="date" class="form-control input-custom mb-2" id="buscarFecha">
+                        <button class="btn btn-outline-brown w-100" onclick="buscarTurno()">Buscar</button>
+                    </div>
+                    <div id="resultadoBusqueda"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="js/index.js"></script>
+</body>
+</html>
